@@ -1,0 +1,206 @@
+/*=============================== ALTER TABLE ==================================
+   
+    ALTER TABLE  tabloda ADD, MODIFY, veya DROP/DELETE COLUMNS islemleri icin
+    kullanilir.
+   
+    ALTER TABLE ifadesi tablolari yeniden isimlendirmek (RENAME) icin de
+    kullanilir.
+  
+==============================================================================*/
+CREATE TABLE perso
+    (
+        id NUMBER(9), 
+        isim VARCHAR2(50), 
+        sehir VARCHAR2(50), 
+        maas NUMBER(20), 
+        sirket VARCHAR2(20),
+        CONSTRAINT perso_pk PRIMARY KEY (id)
+        );
+        
+    INSERT INTO perso VALUES(123456789, 'Ali Yilmaz', 'Istanbul', 5500, 'Honda');
+    INSERT INTO perso VALUES(234567890, 'Veli Sahin', 'Istanbul', 4500, 'Toyota');
+    INSERT INTO perso VALUES(345678901, 'Mehmet Ozturk', 'Ankara', 3500, 'Honda'); 
+    INSERT INTO perso VALUES(456789012, 'Mehmet Ozturk', 'Izmir', 6000, 'Ford');
+    INSERT INTO perso VALUES(567890123, 'Mehmet Ozturk', 'Ankara', 7000, 'Tofas');
+    INSERT INTO perso VALUES(456715012, 'Veli Sahin', 'Ankara', 4500, 'Ford');
+    INSERT INTO perso VALUES(123456710, 'Hatice Sahin', 'Bursa', 4500, 'Honda');
+    
+DROP TABLE perso;
+SELECT * FROM perso;
+
+/* -----------------------------------------------------------------------------
+  ORNEK1: personel tablosuna ulke_isim adinda ve default degeri ‘Turkiye’ olan
+  yeni bir sutun ekleyiniz.
+------------------------------------------------------------------------------*/
+ALTER TABLE perso
+ADD ulke_isim VARCHAR2(20) DEFAULT 'TURKIYE'
+
+/* -----------------------------------------------------------------------------
+  ORNEK2: personel tablosuna cinsiyet Varchar2(20) ve yas Number(3) seklinde 
+  yeni sutunlar ekleyiniz.
+------------------------------------------------------------------------------*/  
+ALTER TABLE perso
+ADD (cinsiyet VARCHAR2(20), yas NUMBER(3));
+
+/*ORNERK 3 PERSONEL TABLOSUNDAN YAS SUTUNUNU SILINIZ.*/
+
+ALTER TABLE perso
+DROP COLUMN yas;
+
+/*ornek4: personel tablosundaki ulke_isim adini ulke_adi olarak degistirin*/
+ALTER TABLE perso
+RENAME COLUMN ulke_isim TO ulke_adi;
+
+/*ORNEK5 : perso tablosunun adini isciler olarak degistiriniz.*/
+ALTER TABLE perso
+RENAME TO isciler;
+
+/*ORNEK6: isciler tablosundaki ulke_adi sutununa NOT NULL kisitlamasi ekleyiniz.*/
+ALTER TABLE isciler
+MODIFY ulke_adi VARCHART2 (30) NOT NULL;
+
+
+	CREATE TABLE bolumler (
+      bolum_id   NUMBER(2) CONSTRAINT bolum_pk PRIMARY KEY,
+      bolum_isim VARCHAR2(14),
+      konum      VARCHAR2(13)
+    );
+    
+    INSERT INTO bolumler VALUES (10,'MUHASABE','IST');
+    INSERT INTO bolumler VALUES (20,'MUDURLUK','ANKARA');
+    INSERT INTO bolumler VALUES (30,'SATIS','IZMIR');
+    INSERT INTO bolumler VALUES (40,'ISLETME','BURSA');
+    INSERT INTO bolumler VALUES (50,'DEPO', 'YOZGAT');
+
+    CREATE TABLE personel (
+      personel_id   NUMBER(4) CONSTRAINT personel_pk PRIMARY KEY,
+      personel_isim VARCHAR2(10),
+      meslek        VARCHAR2(9),
+      mudur_id      NUMBER(4),
+      ise_baslama   DATE,
+      maas          NUMBER(7,2),
+      bolum_id      NUMBER(2) 
+    );
+    
+   SELECT * FROM bolumler;
+  
+    INSERT INTO personel VALUES (7369,'AHMET','KATIP',7902,'17-DEC-1980',800,20);
+    INSERT INTO personel VALUES (7499,'BAHATTIN','SATIS',7698,'20-FEB-1981',1600,30);
+    INSERT INTO personel VALUES (7521,'NESE','SATIS',7698,'22-FEB-1981',1250,30);
+    INSERT INTO personel VALUES (7566,'MUZAFFER','MUDUR',7839,'2-APR-1981',2975,20);
+    INSERT INTO personel VALUES (7654,'MUHAMMET','SATIS',7698,'28-SEP-1981',1250,30);
+    INSERT INTO personel VALUES (7698,'EMINE','MUDUR',7839,'1-MAY-1981',2850,30);
+    INSERT INTO personel VALUES (7782,'HARUN','MUDUR',7839,'9-JUN-1981', 2450,10);
+    INSERT INTO personel VALUES (7788,'MESUT','ANALIST',7566,'13-JUL-87',3000,20);
+    INSERT INTO personel VALUES (7839,'SEHER','BASKAN',NULL,'17-NOV-1981',5000,10);
+    INSERT INTO personel VALUES (7844,'DUYGU','SATIS',7698,'8-SEP-1981',1500,30);
+    INSERT INTO personel VALUES (7876,'ALI','KATIP',7788,'13-JUL-87',1100,20);
+    INSERT INTO personel VALUES (7900,'MERVE','KATIP',7698,'3-DEC-1981',950,30);
+    INSERT INTO personel VALUES (7902,'NAZLI','ANALIST',7566,'3-DEC-1981',3000,20);
+    INSERT INTO personel VALUES (7934,'EBRU','KATIP',7782,'23-JAN-1982',1300,10);
+    INSERT INTO personel VALUES (7956,'SIBEL','MIMAR',7782,'29-JAN-1991',3300,60);
+    INSERT INTO personel VALUES (7933,'ZEKI','MUHENDIS',7782,'26-JAN-1987',4300,60);
+     
+    SELECT * FROM personel;
+    DROP TABLE personel;
+    
+    Select personel_isim FROM personel WHERE personel_id=7369;
+
+ /* -----------------------------------------------------------------------------
+  ORNEK1: SATIS ve MUHASABE bolumlerinde calisan personelin isimlerini ve 
+  bolumlerini, once bolum sonra isim s?ral? olarak listeleyiniz
+------------------------------------------------------------------------------*/ 
+
+	SELECT B.bolum_isim ,P.personel_isim
+	FROM bolumler B
+	JOIN personel P
+	ON B.bolum_id = P.bolum_id
+	WHERE B.bolum_id IN(10,30)
+	ORDER BY B.bolum_isim, p.personel_isim;
+
+  
+/* -----------------------------------------------------------------------------
+  ORNEK2: SATIS,ISLETME ve DEPO bolumlerinde calisan personelin isimlerini,  
+  bolumlerini ve ise_baslama tarihlerini isim s?ral? olarak listeleyiniz. 
+  NOT: calisani olmasa bile bolum ismi gosterilmelidir.
+------------------------------------------------------------------------------*/  
+
+	 SELECT B.bolum_isim, P.personel_isim, P.ise_baslama
+	 FROM bolumler B
+     LEFT JOIN personel P
+	 ON P.bolum_id=B.bolum_id
+	 WHERE B.bolum_id IN (40,30,50)
+	 ORDER BY B.bolum_isim;
+
+/* -----------------------------------------------------------------------------
+  ORNEK3: Tüm bolumlerde calisan personelin isimlerini, bolum isimlerini ve 
+  maaslarini bolum ve maas siraali listeleyiniz. 
+  NOT: calisani olmasa bile bolum ismi gosterilmelidir.
+------------------------------------------------------------------------------*/
+SELECT B.bolum_isim, P.personel_isim,P.maas
+FROM bolumler B
+FULL JOIN personel P
+ON P.bolum_id=B.bolum_id
+ORDER BY B.bolum_isim, P.maas;
+/* -----------------------------------------------------------------------------
+  ORNEK4: SATIS ve MUDURLUK bolumlerinde calisan personelin maaslari 2000'den 
+  buyuk olanlarinin isim,bolum ve maas bilgilerini bolume ve isme gore
+  siralayarak listeleyiniz.
+------------------------------------------------------------------------------*/
+SELECT B.bolum_isim,P.personel_isim,P.maas
+FROM bolumler B
+JOIN personel P
+ON P.bolum_id=B.bolum_id
+WHERE B.bolum_id IN (20,30) AND maas>2000
+ORDER BY B.bolum_isim, P.personel_isim ;
+
+/* -----------------------------------------------------------------------------
+  ORNEK5: MUDUR’u Mesut veya Emine olan personelin bolumlerini,isimlerini,  
+  maaslarini ve mudur isimlerini maas siral? olarak (Çoktan aza) listeleyiniz.
+------------------------------------------------------------------------------*/
+ SELECT b.bolum_isim, p.personel_isim,p.maas, 
+                    (SELECT personel_isim FROM personel 
+                     WHERE  personel_id = p.mudur_id) as mudur_adi 
+    FROM bolumler b
+    JOIN personel p 
+    ON b.bolum_id = p.bolum_id
+    WHERE  p.mudur_id IN(7788,7698) 
+    ORDER BY p.maas DESC;
+    
+SELECT P.personel_isim,P.maas,B.bolum_isim,B.bolum_id
+FROM bolumler B
+JOIN personel P
+ON P.bolum_id= B.bolum_id
+WHERE B.bolum_id IN (SELECT bolum_id FROM personel 
+WHERE meslek='MUDUR'
+AND
+personel_isim IN('MESUT','EMINE'))
+ORDER BY P.maas DESC;
+
+SELECT bolum_isim,bolum_id,(SELECT personel_isim FROM personel 
+WHERE meslek='MUDUR' AND bolumler.bolum_id =personel.bolum_id) AS mudur_ismi
+FROM bolumler;
+
+SELECT personel_isim,maas FROM personel 
+WHERE bolum_id IN (10,30)
+ORDER by maas;
+/*=======================================================================
+ ORNEK5: Maasi en yuksek 10 kisiyinin bolumunu,adini ve maasini listeyiniz
+ ========================================================================*/
+SELECT B.bolum_isim,P.personel_isim,P.maas
+FROM personel P
+FULL JOIN bolumler B
+ON P.bolum_id=B.bolum_id
+ORDER by maas DESC;
+
+
+commit;
+
+
+
+
+
+
+
+
+

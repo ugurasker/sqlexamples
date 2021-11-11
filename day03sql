@@ -1,0 +1,116 @@
+CREATE TABLE ogrenciler
+(
+    id NUMBER(9),
+    isim VARCHAR2(50),
+    adres VARCHAR2(100),
+    sinav_notu NUMBER(3)
+);
+INSERT INTO ogrenciler VALUES(123, 'Ali Can', 'Ankara', 75);
+INSERT INTO ogrenciler VALUES(124, 'Merve Gul', 'Ankara', 85);
+INSERT INTO ogrenciler VALUES(125, 'Kemal Yasa', 'Istanbul', 85);
+
+SELECT * FROM ogrenciler
+WHERE sinav_notu>80;
+
+SELECT isim,sinav_notu 
+FROM ogrenciler
+WHERE sinav_notu>80;
+
+SELECT isim 
+FROM ogrenciler
+WHERE sinav_notu>80 AND adres = 'Ankara';
+
+DROP TABLE ogrenciler;
+
+CREATE TABLE perso
+    (   
+        id CHAR(5),
+        isim VARCHAR2(50),
+        maas NUMBER(5)
+    );
+?
+    INSERT INTO perso VALUES('10001', 'Ahmet Aslan', 7000);
+    INSERT INTO perso VALUES('10002', 'Mehmet Y?lmaz' ,12000);
+    INSERT INTO perso VALUES('10003', 'Meryem ', 7215);
+    INSERT INTO perso VALUES('10004', 'Veli Han', 5000);
+    INSERT INTO perso VALUES('10005', 'Mustafa Ali', 5500);
+    INSERT INTO perso VALUES('10005', 'Ay?e Can', 4000);
+    
+    DROP TABLE perso;
+?
+    SELECT * FROM perso;
+    
+    SELECT * FROM perso
+    WHERE id BETWEEN '10002' AND '10005';
+    
+    SELECT * FROM perso
+    WHERE id NOT BETWEEN '10002' AND '10004';
+    
+    SELECT * FROM perso
+    WHERE id IN (10001,10002,10004);
+    
+    SELECT * FROM perso
+    WHERE maas IN (7000,12000);
+    
+    SELECT * FROM personel
+    WHERE isim LIKE 'A%';
+    -- '%n' N ILE BITEN
+    -- '%an%' ISMINDE AN OLAN
+    -- '_li%' ikinci karakter l 3. karakter i ,
+    -- '_a%y%'   ikinci karakter a ve icinde y olan
+    -- '__r___' 6 harfli , 3. harfi r 
+    -- where maas like '_____' 5 basamakli maaslar
+     --        not like '______' 5 basamakli maaslari gosterme
+     
+CREATE TABLE kelimeler (
+    id NUMBER(10) UNIQUE,
+    kelime VARCHAR2(50) NOT NULL,
+    harf_sayisi NUMBER(6)
+);   
+INSERT INTO kelimeler VALUES(1001,'hot',3); 
+INSERT INTO kelimeler VALUES(1002,'hat',3);  
+INSERT INTO kelimeler VALUES(1003,'hit',3);  
+INSERT INTO kelimeler VALUES(1004,'hbt',3);
+INSERT INTO kelimeler VALUES(1008,'hct',3);  
+INSERT INTO kelimeler VALUES(1005,'adem',4);
+INSERT INTO kelimeler VALUES(1006,'selim',5);  
+INSERT INTO kelimeler VALUES(1007,'yunus',5);
+INSERT INTO kelimeler VALUES(1009,'hoot',5);
+
+
+SELECT * FROM kelimeler
+WHERE REGEXP_LIKE (kelime, 'h[ai]t');
+ -- h ie baslayip t ile bitip 2. harfi a veya i olanlar
+SELECT * FROM kelimeler
+WHERE REGEXP_LIKE (kelime, 'h[a-k0-9]t');
+  -- h ile baslayip t ile bitip. 2. harfi a dan k ya 0dan 9a kadar olanlar
+SELECT * FROM kelimeler
+WHERE REGEXP_LIKE (kelime, '[mie](*)');
+  -- icinde m veya i veya e olan
+SELECT * FROM kelimeler
+WHERE REGEXP_LIKE (kelime, '^[as]');
+  -- a ile veya s ile baslayan
+SELECT * FROM kelimeler
+WHERE REGEXP_LIKE (kelime, '[ms]$');
+  -- m ile veya s ile biten
+SELECT * FROM kelimeler
+WHERE REGEXP_LIKE (kelime,'ot|at'); 
+ -- icinde ot veya at iceren kelimeler
+SELECT * FROM kelimeler
+WHERE REGEXP_LIKE (kelime,'ot|at', 'i');
+-- case insensitive arama
+SELECT * FROM kelimeler
+WHERE REGEXP_LIKE (kelime,'[o]{2}', 'i');
+-- 2 tane o olan 
+
+
+
+
+
+
+
+
+
+
+
+
